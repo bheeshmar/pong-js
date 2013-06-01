@@ -2,6 +2,14 @@
 <html>
 <head>
 <title>PONG!</title>
+<style>
+  canvas { border: 1px solid black; }
+</style>
+</head>
+
+<body onload="draw();" onmousedown="toggle_simulation();">
+	<canvas id="canvas" width="400" height="400"></canvas>
+</body>
 <script>
   var interval;
   function run_simulation() { interval = window.setInterval(game_loop, 100); }
@@ -22,44 +30,65 @@
   var min_y = 0;
   var max_x = 400;
   var max_y = 400;
+  var paddle_x = 200;
+  var paddle_y = max_y - 20;
+  var canvas = document.getElementById('canvas');
+
+  canvas.addEventListener("mousemove", function(event) {
+    paddle_x = event.clientX;
+  }, false);
 
   function game_loop() { update(); draw(); }
+
+  function hit_paddle() {
+    return (dy > 0 && 
+    y >= paddle_y && 
+    x >= (paddle_x - 20) && 
+    x <= (paddle_x + 20));
+  }
+
+  function bounce_x() {
+      dx = -dx;
+  }
+
+  function bounce_y() {
+      dy = -dy;
+  }
 
   function update() {
     x += dx;
     y += dy;
+    if (hit_paddle()) {
+      bounce_y();
+    }
     if (x > max_x) {
-      dx = -dx;
+      bounce_x();
       x = max_x;
     }
     if (x < min_x) {
-      dx = -dx;
+      bounce_x();
       x = min_x;
     }
     if (y > max_y) {
-      dy = -dy;
+      bounce_y();
       y = max_y;
     }
     if (y < min_y) {
-      dy = -dy;
+      bounce_y();
       y = min_y;
     }
   }
 
   function draw(){
-    var ctx = document.getElementById('canvas').getContext('2d');
+    var ctx = canvas.getContext('2d');
     ctx.clearRect(min_x, min_y, max_x, max_y);
     ctx.fillRect(x,y,10,10);
+
+    // paddle
+    ctx.fillRect(paddle_x-20, paddle_y, 40, 10);
+
   }
 </script>
-<style>
-  canvas { border: 1px solid black; }
-</style>
-</head>
-
-<body onload="draw();" onmousedown="toggle_simulation();">
-	<canvas id="canvas" width="400" height="400"></canvas>
-</body>
 </html>
 <!-- vim: ts=2:sw=2:et
 -->
