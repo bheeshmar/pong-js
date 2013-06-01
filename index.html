@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PONG!</title>
+<script>
+  var interval;
+  function run_simulation() { interval = window.setInterval(game_loop, 100); }
+  function pause_simulation() { window.clearInterval(interval); interval = null; }
+  function toggle_simulation() { 
+    if (interval != null) { 
+      pause_simulation();
+      } else {
+      run_simulation();
+    }
+  }
+
+  var x = 10;
+  var y = 40;
+  var dx = 5;
+  var dy = 4;
+  var min_x = 0;
+  var min_y = 0;
+  var max_x = 400;
+  var max_y = 400;
+
+  function game_loop() { update(); draw(); }
+
+  function update() {
+    x += dx;
+    y += dy;
+    if (x > max_x) {
+      dx = -dx;
+      x = max_x;
+    }
+    if (x < min_x) {
+      dx = -dx;
+      x = min_x;
+    }
+    if (y > max_y) {
+      dy = -dy;
+      y = max_y;
+    }
+    if (y < min_y) {
+      dy = -dy;
+      y = min_y;
+    }
+  }
+
+  function draw(){
+    var ctx = document.getElementById('canvas').getContext('2d');
+    ctx.clearRect(min_x, min_y, max_x, max_y);
+    ctx.fillRect(x,y,10,10);
+  }
+</script>
+<style>
+  canvas { border: 1px solid black; }
+</style>
+</head>
+
+<body onload="draw();" onmousedown="toggle_simulation();">
+	<canvas id="canvas" width="400" height="400"></canvas>
+</body>
+</html>
+<!-- vim: ts=2:sw=2:et
+-->
