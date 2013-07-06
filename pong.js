@@ -1,3 +1,5 @@
+var pong = (function(my) {
+
   var interval;
   function run_simulation() { interval = window.setInterval(game_loop,  50); }
   function pause_simulation() { window.clearInterval(interval); interval = null; }
@@ -78,5 +80,11 @@
     // paddle
     ctx.fillRect(paddle_x-20, paddle_y, 40, 10);
   }
-window.onload = init;
-window.onclick = toggle_simulation;
+  my.init = init;
+  my.toggle_simulation = toggle_simulation;
+  return my;
+}(pong || {}));
+
+window.onload = pong.init;
+window.onclick = pong.toggle_simulation;
+// vim: ts=2:sw=2:et
